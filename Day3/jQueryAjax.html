@@ -1,0 +1,70 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</script>
+<script type="text/javascript">
+    function show(){
+        document.getElementById("test").innerHTML="hello";
+    }
+    window.load=function(){
+    show();
+    }
+    $(document).ready(function(){
+        setInterval(UsingAjax,3000);
+        $("#test").html('Please wait.....');
+      
+    });
+    function dataAvailable()
+            {
+                //alert("data recieved state \n "+this.readyState 
+                  //  + " \n status -" + this.status);
+                  if(this.readyState==4 && this.status==200)
+                  {
+                   $("#test").html(this.responseText);
+                  }
+            }
+
+            function downloadData()
+            {
+                var myurl = "https://jsonplaceholder.typicode.com/posts";
+                var httpReq = new XMLHttpRequest();
+                httpReq.onreadystatechange = dataAvailable;
+                httpReq.open("GET", myurl, true);
+                httpReq.send();
+
+
+            }
+            function useAjax(){
+                var myurl = "https://jsonplaceholder.typicode.com/posts";
+                $.get(myurl, function(data, status){ 
+                    $("#test").html(JSON.stringify(data));
+                 });
+            }
+            function UsingAjax(){
+                var myurl = "https://jsonplaceholder.typicode.com/posts";
+                $("#test").html(this.responseText);
+                var jsonObj={type: "GET", url: myurl, contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    success: function(result){
+          var table="<table><tr><td>userId</td><td>ID</td><td>Title</td></tr>";
+            $.each(result,function(i,o){
+                table+="<tr><td>"+o.userId+"</td><td>"+o.id+"</td><td>"+o.title+"</td></tr>"
+            })
+            table+="<table>";
+            $("#test").html(table); 
+    }
+}
+                $.ajax(jsonObj);
+
+            }
+
+</script>
+</head>
+<body>
+    <div id='test'>
+
+    </div>
+    <div>Static data</div>
+    <input type='button' value='show' onclick="show()"/>
+</body>
+</html>
